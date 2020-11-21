@@ -25,7 +25,7 @@ def get_list_asset():
     res = requests.get(uri, auth=(username, password))
     if (res.status_code != 200):
         print("Error with uri:" + uri)
-    json.loads(res.text)
+    return json.loads(res.text)
 
 def get_asset(asset_id):
     uri = url + "asset/" + str(asset_id)
@@ -33,3 +33,11 @@ def get_asset(asset_id):
     if (res.status_code != 200):
         print("Error with uri:" + uri)
     return json.loads(res.text)
+
+def test(asset):
+    return asset["TYPE"]["value"] == "STOCK"
+
+def get_list_stock():
+    list_asset = get_list_asset()
+    res = filter(test, list_asset)
+    return res
