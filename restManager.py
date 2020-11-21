@@ -27,9 +27,10 @@ def get_list_asset():
         print("Error with uri:" + uri)
     return json.loads(res.text)
 
-def get_asset(asset_id):
+def get_asset(asset_id, date):
     uri = url + "asset/" + str(asset_id)
-    res = requests.get(uri, auth=(username, password))
+    payload = {"columns": ["ASSET_DATABASE_ID", "LABEL","TYPE", "CURRENCY", "LAST_CLOSE_VALUE_IN_CURR"], "date":date}
+    res = requests.get(uri, params = payload, auth=(username, password))
     if (res.status_code != 200):
         print("Error with uri:" + uri)
     return json.loads(res.text)
@@ -39,5 +40,13 @@ def test(asset):
 
 def get_list_stock():
     list_asset = get_list_asset()
-    res = filter(test, list_asset)
+    res = list(filter(test, list_asset))
     return res
+
+def get_change_rate(date, src_currency, tgt_currency):
+    uri = url + "currency/rate/" + src_currency + "/to/" + tgt_currency
+    payload = {"date": date}
+    res = requests.get(uri, params = payload, auth=(username, password))
+    if (res.status_code != 200):
+        print("Error with uri:" + uri)
+    return json.loads(res.text)
