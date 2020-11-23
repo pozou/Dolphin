@@ -49,4 +49,4 @@ def get_change_rate(date, src_currency, tgt_currency):
     res = requests.get(uri, params = payload, auth=(username, password))
     if (res.status_code != 200):
         print("Error with uri:" + uri)
-    return json.loads(res.text)
+    return json.loads(res.text)["rate"]["value"]
