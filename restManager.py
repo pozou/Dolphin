@@ -65,3 +65,11 @@ def get_last_close_value(asset_id, date):
     if (res.status_code != 200):
         print("Error with uri: " + uri)
     return json.loads(res.text)
+
+def get_quote_list(asset_id, start_date, end_date):
+    uri = url + "asset/" + str(asset_id) + "/quote"
+    payload = {"sart_date": start_date, "end_date": end_date}
+    res = requests.get(uri, params = payload, auth=(username, password))
+    if (res.status_code != 200):
+        print("Error with uri: " + uri)
+    return json.loads(res.text)
