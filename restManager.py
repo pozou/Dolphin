@@ -57,3 +57,11 @@ def get_ratio_list():
     if (res.status_code != 200):
         print("Error with uri: " + uri)
     return json.loads(res.text)
+
+def get_last_close_value(asset_id, date):
+    uri = url + "asset/" + str(asset_id) + "/attribute/LAST_CLOSE_VALUE"
+    payload = {"date": date}
+    res = requests.get(uri, params = payload, auth=(username, password))
+    if (res.status_code != 200):
+        print("Error with uri: " + uri)
+    return json.loads(res.text)
