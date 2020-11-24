@@ -4,6 +4,11 @@ nb_actif = 20
 nb_asset_min = 15
 nb_asset_max = 40
 
+sharpe_id = 12
+
+period_start_date = "2016-06-01"
+period_end_date = "2020-09-30"
+
 def generate_portfolio():
     portfolio = []
     list_asset = restManager.get_list_stock()
@@ -34,7 +39,7 @@ Conditions :
 
 def check_portfolio_conditions(portfolio_id):
     portfolio = restManager.get_portfolio(portfolio_id)
-    values = portfolio['values']
+    values = portfolio["values"]
     portfolio_size = len(values)
     portfolio_amount = 0
     if (portfolio_size < nb_asset_min) :
@@ -53,7 +58,7 @@ def stock_rate(portfolio_values, nb_assets):
     rate = 0
     nb_stocks = 0
     for value in portfolio_values:
-        if value['TYPE']['value'] == 'STOCK': # à tester
+        if value["TYPE"]["value"] == "STOCK": # à tester
             nb_stocks += 1
     if nb_stocks == 0 or nb_assets == 0:
         return 0

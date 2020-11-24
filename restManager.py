@@ -1,13 +1,11 @@
 import requests
 import json
+import portfolio
 
 host_name = "dolphin.jump-technology.com"
 port = 8443
 username = "EPITA_GROUPE13"
 password = "XMkT6qVPZ4CFkjxh"
-
-period_start_date = "2016-06-01"
-period_end_date = "2020-09-30"
 
 url = "https://" + host_name + ":" + str(port)  + "/api/v1/"
 
@@ -82,6 +80,14 @@ def get_ratio_list():
     if (res.status_code != 200):
         print("Error with uri: " + uri)
     return json.loads(res.text)
+
+def get_ratio_sharpe():
+    ratio_list = get_ratio_list()
+    res = list(filter(test_ratio, ratio_list))
+    return res
+
+def test_ratio(ratio):
+    return ratio["id"] == portfolio.sharpe_id
 
 '''
 def invoke_ratio(ratio_list, ):
