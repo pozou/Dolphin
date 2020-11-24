@@ -30,7 +30,7 @@ def get_list_asset():
 def get_asset(asset_id, date):
     uri = url + "asset/" + str(asset_id)
     payload = {"columns": ["ASSET_DATABASE_ID", "LABEL","TYPE", "CURRENCY", "LAST_CLOSE_VALUE_IN_CURR"], "date":date}
-    res = requests.get(uri, params = payload, auth=(username, password))
+    res = requests.get(uri, params=payload, auth=(username, password))
     if (res.status_code != 200):
         print("Error with uri: " + uri)
     return json.loads(res.text)
@@ -46,7 +46,7 @@ def get_list_stock():
 def get_change_rate(date, src_currency, tgt_currency):
     uri = url + "currency/rate/" + src_currency + "/to/" + tgt_currency
     payload = {"date": date}
-    res = requests.get(uri, params = payload, auth=(username, password))
+    res = requests.get(uri, params=payload, auth=(username, password))
     if (res.status_code != 200):
         print("Error with uri:" + uri)
     return json.loads(res.text)["rate"]["value"]
@@ -61,7 +61,7 @@ def get_ratio_list():
 def get_last_close_value(asset_id, date):
     uri = url + "asset/" + str(asset_id) + "/attribute/LAST_CLOSE_VALUE"
     payload = {"date": date}
-    res = requests.get(uri, params = payload, auth=(username, password))
+    res = requests.get(uri, params=payload, auth=(username, password))
     if (res.status_code != 200):
         print("Error with uri: " + uri)
     return json.loads(res.text)
