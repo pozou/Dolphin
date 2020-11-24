@@ -24,10 +24,19 @@ def check_portfolio_conditions(portfolio_id):
     if (portfolio_size > nb_asset_max):
         print("portfolio size: " + str(portfolio_size) + " is more than the maximal required size: " + str(nb_asset_max))
         return False
-    nb_asset = 0
-    for i in values:
-        if values[i]['TYPE']['value'] == 'STOCK': # à tester
-            nb_asset += 1
-    if (portfolio_size // nb_asset) < 2.0: # voir si ça fait bien la virgule
+    rate = stock_rate(values, portfolio_size)
+    if rate > 50.0: # voir si ça fait bien la virgule
+        print("the rate of stocks : " + rate + "% is more than the required 50%")
         return False
     return True
+
+def stock_rate(portfolio_values, nb_assets):
+    rate = 0
+    nb_stocks = 0
+    for value in portfolio_values:
+        if value['TYPE']['value'] == 'STOCK': # à tester
+            nb_stocks += 1
+    if nb_stocks == 0 or nb_assets == 0:
+        return 0
+    rate = 100 * float(nb_stocks)/float(nb_assets)
+    return rate
