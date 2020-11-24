@@ -17,14 +17,14 @@ def get_portfolio(_portfolio_id):
     uri = url + "portfolio/" + str(_portfolio_id) + "/dyn_amount_compo"
     res = requests.get(uri, auth=(username, password))
     if (res.status_code != 200):
-        print("Error with uri:" + uri)
+        print("Error with uri: " + uri)
     return json.loads(res.text)
 
 def get_list_asset():
     uri = url + "asset/"
     res = requests.get(uri, auth=(username, password))
     if (res.status_code != 200):
-        print("Error with uri:" + uri)
+        print("Error with uri: " + uri)
     return json.loads(res.text)
 
 def get_asset(asset_id, date):
@@ -32,7 +32,7 @@ def get_asset(asset_id, date):
     payload = {"columns": ["ASSET_DATABASE_ID", "LABEL","TYPE", "CURRENCY", "LAST_CLOSE_VALUE_IN_CURR"], "date":date}
     res = requests.get(uri, params = payload, auth=(username, password))
     if (res.status_code != 200):
-        print("Error with uri:" + uri)
+        print("Error with uri: " + uri)
     return json.loads(res.text)
 
 def test(asset):
@@ -50,3 +50,10 @@ def get_change_rate(date, src_currency, tgt_currency):
     if (res.status_code != 200):
         print("Error with uri:" + uri)
     return json.loads(res.text)["rate"]["value"]
+
+def get_ratio_list():
+    uri = url + "ratio/"
+    res = requests.get(uri, auth=(username, password))
+    if (res.status_code != 200):
+        print("Error with uri: " + uri)
+    return json.loads(res.text)
