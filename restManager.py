@@ -73,3 +73,12 @@ def get_quote_list(asset_id, start_date, end_date):
     if (res.status_code != 200):
         print("Error with uri: " + uri)
     return json.loads(res.text)
+
+def update_portfolio(_portfolio_id, new_portfolio): #faire attention à l'objet portfolio
+    uri = url + "portfolio/" + _portfolio_id + "/dyn_amount_compo"
+    res = requests.put(uri, new_portfolio)
+    if (res.status_code != 200):
+        print("Error with uri: " + uri)
+        return False
+    print("Update OK")
+    return True
