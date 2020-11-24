@@ -13,6 +13,16 @@ def generate_portfolio():
         i += 1
     return portfolio # Bad Object
 
+'''
+Conditions :
+    - Le portefeuille doit être exactement composé d'un minimum de 15 actifs, et d'un maximum de 40 actifs.
+    - Chaque actif doit représenter un %NAV du portefeuille entre 1 et 10% à la date du 01/06/2016
+    - Le portefeuille n'aura qu'une unique composition commençant le 01/06/2016
+    _ On évaluera le sharpe sur la période du 01/06/2016 au 30/09/2020
+    - Le portefeuille devra comporter au moins 50% d'actions
+    => Tout est en montant et pas en quantité
+'''
+
 def check_portfolio_conditions(portfolio_id):
     portfolio = restManager.get_portfolio(portfolio_id)
     values = portfolio['values']
