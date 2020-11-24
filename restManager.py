@@ -51,13 +51,6 @@ def get_change_rate(date, src_currency, tgt_currency):
         print("Error with uri:" + uri)
     return json.loads(res.text)["rate"]["value"]
 
-def get_ratio_list():
-    uri = url + "ratio/"
-    res = requests.get(uri, auth=(username, password))
-    if (res.status_code != 200):
-        print("Error with uri: " + uri)
-    return json.loads(res.text)
-
 def get_last_close_value(asset_id, date):
     uri = url + "asset/" + str(asset_id) + "/attribute/LAST_CLOSE_VALUE"
     payload = {"date": date}
@@ -82,3 +75,16 @@ def update_portfolio(_portfolio_id, new_portfolio): #faire attention à l'objet 
         return False
     print("Update OK")
     return True
+
+def get_ratio_list():
+    uri = url + "ratio/"
+    res = requests.get(uri, auth=(username, password))
+    if (res.status_code != 200):
+        print("Error with uri: " + uri)
+    return json.loads(res.text)
+
+'''
+def invoke_ratio(ratio_list, ):
+    uri = url + "ratio/invoke"
+    res = requests.
+'''

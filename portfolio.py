@@ -14,6 +14,15 @@ def generate_portfolio():
     return portfolio # Bad Object
 
 '''
+def generate_fifty_percent_best_stocks(list_stock):
+    assets = []
+    for asset in list_stock:
+        if asset["MARKET_PLACE_CURRENCY"]["value"] != "EUR":
+            restManager.get_change_rate()
+    return assets
+'''
+
+'''
 Conditions :
     - Le portefeuille doit être exactement composé d'un minimum de 15 actifs, et d'un maximum de 40 actifs.
     - Chaque actif doit représenter un %NAV du portefeuille entre 1 et 10% à la date du 01/06/2016
