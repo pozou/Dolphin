@@ -4,7 +4,7 @@ import requests
 
 import restManager
 from pprint import pprint
-nb_actif = 14
+nb_actif = 20
 nb_asset_min = 15
 nb_asset_max = 40
 
@@ -26,12 +26,14 @@ def generate_portfolio():
     i = 0
     money_total = 10000
     while len(portfolio) < nb_actif:
-        quantity = 5.0
-        if list_asset[i]['CURRENCY']['value'] != 'EUR':
-            value = convert_currency(list_asset[i]['CURRENCY']['value'], list_asset[i]['LAST_CLOSE_VALUE_IN_CURR']['value'])
-        else:
-            value = float(list_asset[i]['LAST_CLOSE_VALUE_IN_CURR']['value'].replace(',', '.').replace(' EUR', ''))
-
+        try:
+            if list_asset[i]['CURRENCY']['value'] != 'EUR':
+                value = convert_currency(list_asset[i]['CURRENCY']['value'], list_asset[i]['LAST_CLOSE_VALUE_IN_CURR']['value'])
+            else:
+                value = float(list_asset[i]['LAST_CLOSE_VALUE_IN_CURR']['value'].replace(',', '.').replace(' EUR', ''))
+        except:
+            i += 1
+            continue
         quantity = int((money_total / value) * (1 / nb_actif))
 
         # Trie des assets ici
