@@ -4,7 +4,7 @@ import requests
 
 import restManager
 from pprint import pprint
-nb_actif = 14
+nb_actif = 20
 nb_asset_min = 15
 nb_asset_max = 40
 
@@ -26,13 +26,14 @@ def generate_portfolio():
     i = 0
     money_total = 10000
     while len(portfolio) < nb_actif:
-        quantity = 5.0
-        pprint(list_asset[i])
-        if list_asset[i]['CURRENCY']['value'] != 'EUR':
-            value = convert_currency(list_asset[i]['CURRENCY']['value'], list_asset[i]['LAST_CLOSE_VALUE_IN_CURR']['value'])
-        else:
-            value = float(list_asset[i]['LAST_CLOSE_VALUE_IN_CURR']['value'].replace(',', '.').replace(' EUR', ''))
-
+        try:
+            if list_asset[i]['CURRENCY']['value'] != 'EUR':
+                value = convert_currency(list_asset[i]['CURRENCY']['value'], list_asset[i]['LAST_CLOSE_VALUE_IN_CURR']['value'])
+            else:
+                value = float(list_asset[i]['LAST_CLOSE_VALUE_IN_CURR']['value'].replace(',', '.').replace(' EUR', ''))
+        except:
+            i += 1
+            continue
         quantity = int((money_total / value) * (1 / nb_actif))
 
         # Trie des assets ici
@@ -40,11 +41,11 @@ def generate_portfolio():
         #
         # ratio de sharpe d'un actif
         sharpe_actif = float(restManager.invoke_ratio([sharpe_id], [asset_id], 0, period_start_date, period_end_date)[str(asset_id)][str(sharpe_id)]['value'].replace(',', '.'))
-        #pprint(sharpe_actif)
-        if  sharpe_actif > -0.2:
-            #i += 1
+        pprint(sharpe_actif)
+        if  sharpe_actif > 0.8:
             tmp = {"quantity": quantity, "asset": int(list_asset[i]["ASSET_DATABASE_ID"]["value"])}
             portfolio.append(tmp)
+            print("len portofolio : ", len(portfolio))
         i += 1
     print("PORTFOLIO GENERATED")
     return portfolio
