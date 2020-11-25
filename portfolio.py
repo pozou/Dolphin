@@ -1,6 +1,6 @@
 import restManager
 from pprint import pprint
-nb_actif = 2
+nb_actif = 14
 nb_asset_min = 15
 nb_asset_max = 40
 

@@ -21,7 +21,7 @@ def get_portfolio(_portfolio_id):
 
 def get_list_asset():
     uri = url + "asset/"
-    res = requests.get(uri, auth=(username, password))
+    res = requests.get(uri, params={'date': '2016-06-01'},auth=(username, password))
     if (res.status_code != 200):
         print("Error with uri: " + uri)
     return json.loads(res.text)
@@ -74,12 +74,16 @@ def update_portfolio(_portfolio_id, new_portfolio): #faire attention à l'objet 
     list_asset_formated = list(map(format_asset, new_portfolio))
     list_asset_formated.append({'currency': {'amount': 300.0,
                                          'currency': {'code': 'EUR'}}})
-    payload = {"id": portfolio_id,"label": "EPITA_PTF_13", "currency": {'code': 'EUR'}, "type": "front", "values": { "2016-01-01": list_asset_formated}}
-    res = requests.put(uri, params=payload, auth=(username, password))
+    payload = {"id": portfolio_id,"label": "EPITA_PTF_13", "currency": {'code': 'EUR'}, "type": "front", "values": { "2016-06-01": list_asset_formated}}
+    try :
+        res = requests.put(uri, data=json.dumps(payload), auth=(username, password))
+        res.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        print(err)
     if (res.status_code != 200):
         print("Error with uri: " + uri)
         print(res.status_code)
-        print(res.reason)
+        print(res.text)
         return False
     print("Update OK")
     return True
