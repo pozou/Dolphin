@@ -27,6 +27,7 @@ def generate_portfolio():
     money_total = 10000
     while len(portfolio) < nb_actif:
         quantity = 5.0
+        pprint(list_asset[i])
         if list_asset[i]['CURRENCY']['value'] != 'EUR':
             value = convert_currency(list_asset[i]['CURRENCY']['value'], list_asset[i]['LAST_CLOSE_VALUE_IN_CURR']['value'])
         else:
@@ -35,9 +36,17 @@ def generate_portfolio():
         quantity = int((money_total / value) * (1 / nb_actif))
 
         # Trie des assets ici
-        tmp = {"quantity": quantity, "asset": int(list_asset[i]["ASSET_DATABASE_ID"]["value"])}
-        portfolio.append(tmp)
+        asset_id = list_asset[i]['ASSET_DATABASE_ID']['value']
+        #
+        # ratio de sharpe d'un actif
+        sharpe_actif = float(restManager.invoke_ratio([sharpe_id], [asset_id], 0, period_start_date, period_end_date)[str(asset_id)][str(sharpe_id)]['value'].replace(',', '.'))
+        #pprint(sharpe_actif)
+        if  sharpe_actif > -0.2:
+            #i += 1
+            tmp = {"quantity": quantity, "asset": int(list_asset[i]["ASSET_DATABASE_ID"]["value"])}
+            portfolio.append(tmp)
         i += 1
+    print("PORTFOLIO GENERATED")
     return portfolio
 
 
