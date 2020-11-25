@@ -1,3 +1,7 @@
+import json
+
+import requests
+
 import restManager
 from pprint import pprint
 nb_actif = 14
@@ -9,6 +13,12 @@ sharpe_id = 12
 period_start_date = "2016-06-01"
 period_end_date = "2020-09-30"
 
+def convert_currency(currency, value):
+    uri = restManager.url + 'currency/rate/' + currency + '/to/EUR'
+    req = requests.get(uri, params={'date': period_start_date}, auth=(restManager.username, restManager.password))
+    rate = float((json.loads(req.text)['rate']['value']).replace(',', '.'))
+    converted_value = float(value.replace(',', '.').replace(' '+currency, ''))
+    return converted_value * rate
 
 def generate_portfolio():
     portfolio = []
@@ -16,6 +26,10 @@ def generate_portfolio():
     i = 0
     while len(portfolio) < nb_actif:
         quantity = 5.0
+        if list_asset[i]['CURRENCY']['value'] != 'EUR':
+            value = convert_currency(list_asset[i]['CURRENCY']['value'], list_asset[i]['LAST_CLOSE_VALUE_IN_CURR']['value'])
+        else:
+            value = float(list_asset[i]['LAST_CLOSE_VALUE_IN_CURR']['value'].replace(',', '.').replace(' EUR', ''))
         # Trie des assets ici
         tmp = {"quantity": quantity, "asset": int(list_asset[i]["ASSET_DATABASE_ID"]["value"])}
         portfolio.append(tmp)
