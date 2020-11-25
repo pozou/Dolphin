@@ -1,6 +1,9 @@
+from pprint import pprint
+
 import requests
 import json
 import portfolio
+import ratioParamMultiAsset
 
 host_name = "dolphin.jump-technology.com"
 port = 8443
@@ -89,8 +92,10 @@ def get_ratio_sharpe():
 def test_ratio(ratio):
     return ratio["id"] == portfolio.sharpe_id
 
-'''
-def invoke_ratio(ratio_list, ):
+def invoke_ratio(ratio_id, asset_list, benchmark, start_date, end_date):
     uri = url + "ratio/invoke"
-    res = requests.
-'''
+    ratio_param_multi_asset = ratioParamMultiAsset.ratioParamMultiAsset(ratio_id, asset_list, benchmark, start_date, end_date).to_json()
+    res = requests.post(uri, auth=(username, password), data=ratio_param_multi_asset)
+    if (res.status_code != 200):
+        print("Error with uri: " + uri)
+    return json.loads(res.text)
