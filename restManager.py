@@ -1,6 +1,7 @@
 import requests
 import json
 import portfolio
+from pprint import pprint
 
 host_name = "dolphin.jump-technology.com"
 port = 8443
@@ -65,11 +66,20 @@ def get_quote_list(asset_id, start_date, end_date):
         print("Error with uri: " + uri)
     return json.loads(res.text)
 
+def format_asset(asset):
+    return {'asset': asset}
+
 def update_portfolio(_portfolio_id, new_portfolio): #faire attention à l'objet portfolio
-    uri = url + "portfolio/" + _portfolio_id + "/dyn_amount_compo"
-    res = requests.put(uri, new_portfolio)
+    uri = url + "portfolio/" + str(_portfolio_id) + "/dyn_amount_compo"
+    list_asset_formated = list(map(format_asset, new_portfolio))
+    list_asset_formated.append({'currency': {'amount': 300.0,
+                                         'currency': {'code': 'EUR'}}})
+    payload = {"id": portfolio_id,"label": "EPITA_PTF_13", "currency": {'code': 'EUR'}, "type": "front", "values": { "2016-01-01": list_asset_formated}}
+    res = requests.put(uri, params=payload, auth=(username, password))
     if (res.status_code != 200):
         print("Error with uri: " + uri)
+        print(res.status_code)
+        print(res.reason)
         return False
     print("Update OK")
     return True
