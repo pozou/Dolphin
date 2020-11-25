@@ -15,7 +15,9 @@ def generate_portfolio():
     list_asset = restManager.get_list_stock()
     i = 0
     while len(portfolio) < nb_actif:
-        tmp = {"quantity": 5.0, "asset": int(list_asset[i]["ASSET_DATABASE_ID"]["value"])}
+        quantity = 5.0
+        # Trie des assets ici
+        tmp = {"quantity": quantity, "asset": int(list_asset[i]["ASSET_DATABASE_ID"]["value"])}
         portfolio.append(tmp)
         i += 1
     return portfolio
