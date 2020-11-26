@@ -46,7 +46,7 @@ def generate_portfolio():
         if  sharpe_actif > 0.8:
             tmp = {"quantity": quantity, "asset": int(list_asset[i]["ASSET_DATABASE_ID"]["value"])}
             portfolio.append(tmp)
-            money_res += quantity * value
+            money_res += quantity * value + 1
             print("len portofolio : ", len(portfolio))
         i += 1
     print("PORTFOLIO GENERATED")

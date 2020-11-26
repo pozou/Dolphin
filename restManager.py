@@ -74,8 +74,8 @@ def format_asset(asset):
 def update_portfolio(_portfolio_id, new_portfolio, money_total): #faire attention à l'objet portfolio
     uri = url + "portfolio/" + str(_portfolio_id) + "/dyn_amount_compo"
     list_asset_formated = list(map(format_asset, new_portfolio))
-    list_asset_formated.append({'currency': {'amount': money_total,
-                                         'currency': {'code': 'EUR'}}})
+    #list_asset_formated.append({'currency': {'amount': money_total,
+    #                                     'currency': {'code': 'EUR'}}})
     payload = {"id": portfolio_id,"label": "EPITA_PTF_13", "currency": {'code': 'EUR'}, "type": "front", "values": { "2016-06-01": list_asset_formated}}
     try :
         res = requests.put(uri, data=json.dumps(payload), auth=(username, password))
