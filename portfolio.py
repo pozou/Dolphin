@@ -20,12 +20,6 @@ def convert_currency(currency, value):
     converted_value = float(value.replace(',', '.').replace(' '+currency, ''))
     return converted_value * rate
 
-def check_double_asset(portfolio, asset):
-    for p_asset in portfolio:
-        if (p_asset['asset'] == int(asset["ASSET_DATABASE_ID"]["value"])):
-            return True
-    return False
-
 def generate_portfolio():
     portfolio = []
     list_asset = restManager.get_list_stock()
@@ -34,6 +28,7 @@ def generate_portfolio():
     money_total = 10000
     money_res = 0
     sharpe_actif_min = 1.0
+    sharpe_actif_max = 1000.0
     while len(portfolio) < nb_actif:
         try:
             if list_asset[i]['CURRENCY']['value'] != 'EUR':
@@ -52,7 +47,7 @@ def generate_portfolio():
         sharpe_actif = float(restManager.invoke_ratio([sharpe_id], [asset_id], 0, period_start_date, period_end_date)[str(asset_id)][str(sharpe_id)]['value'].replace(',', '.'))
         #pprint(sharpe_actif)
         if  sharpe_actif > sharpe_actif_min:
-            if (check_double_asset(portfolio, list_asset[i])):
+            if (sharpe_actif > sharpe_actif_max):
                 i += 1
                 continue
             tmp = {"quantity": quantity, "asset": int(list_asset[i]["ASSET_DATABASE_ID"]["value"])}
@@ -62,6 +57,7 @@ def generate_portfolio():
         i += 1
         if (i >= len(list_asset)):
             i = 0
+            sharpe_actif_max = sharpe_actif_min
             sharpe_actif_min -= 0.1
     print("PORTFOLIO GENERATED")
     print(money_res)
