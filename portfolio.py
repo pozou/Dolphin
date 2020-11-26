@@ -52,7 +52,7 @@ def generate_portfolio():
         i += 1
     print("PORTFOLIO GENERATED")
     print(money_res)
-    return portfolio
+    return (portfolio, money_total)
 
 def get_best_sharpe():
     pass
