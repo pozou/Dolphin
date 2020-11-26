@@ -23,6 +23,7 @@ def convert_currency(currency, value):
 def generate_portfolio():
     portfolio = []
     list_asset = restManager.get_list_stock()
+    #list_asset = restManager.get_list_asset()
     i = 0
     money_total = 10000
     money_res = 0
@@ -53,13 +54,19 @@ def generate_portfolio():
     print(money_res)
     return portfolio
 
+def get_best_sharpe():
+    pass
+
+def ratio_sharpe_correlation(src_asset, dest_asset):
+    pass
+
 
 '''
 def generate_fifty_percent_best_stocks(list_stock):
     assets = []
     for asset in list_stock:
         if asset["MARKET_PLACE_CURRENCY"]["value"] != "EUR":
-            restManager.get_change_rate()
+            restMa&nager.get_change_rate()
     return assets
 '''
 
@@ -87,12 +94,13 @@ def check_portfolio_conditions(portfolio_id):
         print(
             "portfolio size: " + str(portfolio_size) + " is more than the maximal required size: " + str(nb_asset_max))
         return False
+    '''
     rate = stock_rate(values, portfolio_size)
     if rate > 50.0:  # voir si ça fait bien la virgule
         print("the rate of stocks : " + rate + "% is more than the required 50%")
         return False
+    '''
     return True
-
 
 def stock_rate(portfolio_values, nb_assets):
     rate = 0
