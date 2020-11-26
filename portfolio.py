@@ -67,11 +67,10 @@ def generate_portfolio():
     print(money_res)
     return (portfolio, money_total)
 
-def get_best_sharpe():
-    pass
 
-def ratio_sharpe_correlation(src_asset, dest_asset):
-    pass
+def ratio_sharpe_correlation(benchmark, asset):
+        return float(restManager.invoke_ratio([11], [asset], benchmark, period_start_date, period_end_date)[str(asset)]['11'][
+                'value'].replace(',', '.'))
 
 
 '''
