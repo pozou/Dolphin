@@ -6,7 +6,7 @@ import reference
 
 if __name__ == "__main__":
     print("Main function")
-    tmp, money_total = portfolio.generate_portfolio()
+    #tmp, money_total = portfolio.generate_portfolio()
     #pprint(portfolio.sharpe_id)
     #pprint(tmp)
     #pprint(restManager.get_portfolio(restManager.portfolio_id))
@@ -32,4 +32,4 @@ if __name__ == "__main__":
     #pprint(restManager.invoke_ratio([11], [1956], 1918, portfolio.period_start_date,
     #                                portfolio.period_end_date))
 
-
+    pprint(portfolio.ratio_sharpe_correlation(1956, 1918))
