@@ -8,7 +8,7 @@ if __name__ == "__main__":
     print("Main function")
     res = restManager.get_asset(1855, "2019-06-01")
 
-    tmp = portfolio.generate_portfolio()
+    tmp, money_total = portfolio.generate_portfolio()
     pprint(portfolio.sharpe_id)
     pprint(restManager.get_portfolio(restManager.portfolio_id))
 
@@ -20,6 +20,6 @@ if __name__ == "__main__":
     pprint(portfolio.check_portfolio_conditions(restManager.portfolio_id))
     pprint(restManager.get_portfolio(restManager.portfolio_id))
     #pprint(restManager.get_list_stock())
-    #restManager.update_portfolio(restManager.portfolio_id, port)
+    restManager.update_portfolio(restManager.portfolio_id, tmp, money_total)
 
 
