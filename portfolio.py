@@ -2,7 +2,6 @@ import json
 import requests
 
 import restManager
-from pprint import pprint
 
 nb_actif = 40
 nb_asset_min = 15
@@ -27,7 +26,6 @@ def generate_portfolio():
     money_total = 10000
     sharpe_actif_min = 0.8
     sharpe_actif_max = 1000.0
-    print(len(list_asset))
     while len(portfolio) < nb_actif:
         try:
             if list_asset[i]['CURRENCY']['value'] != 'EUR':
@@ -44,19 +42,7 @@ def generate_portfolio():
 
         # ratio de sharpe d'un actif
         sharpe_actif = float(restManager.invoke_ratio([sharpe_id], [asset_id], 0, period_start_date, period_end_date)[str(asset_id)][str(sharpe_id)]['value'].replace(',', '.'))
-        '''
-        #-------------------
-        correlation = ratio_correlation(1832, asset_id)
-        ratio_sharpe_correlation = sharpe_actif / correlation
-        if sharpe_actif > 0.8 and ratio_sharpe_correlation > 5.0:
-            print("id asset : ", asset_id, " sharpe : ", sharpe_actif, " correlation : ", correlation,
-                  " ratio sharpe/correlation : ", float(sharpe_actif / correlation))
-            tmp = {"quantity": quantity, "asset": int(list_asset[i]["ASSET_DATABASE_ID"]["value"])}
-            portfolio.append(tmp)
-            print("len portofolio : ", len(portfolio))
-        i += 1
-        #-------------------
-        '''
+
         if sharpe_actif > sharpe_actif_min:
             correlation = ratio_correlation(1832, asset_id)
             ratio_sharpe_correlation = sharpe_actif / correlation
@@ -65,15 +51,11 @@ def generate_portfolio():
                 continue
             tmp = {"quantity": quantity, "asset": int(list_asset[i]["ASSET_DATABASE_ID"]["value"])}
             portfolio.append(tmp)
-            print("len portofolio : ", len(portfolio))
-
-            print("id asset : ", asset_id, " sharpe : ", sharpe_actif, " correlation : ", correlation, " ratio sharpe/correlation : ", ratio_sharpe_correlation)
         i += 1
         if (i >= len(list_asset)):
             i = 0
             sharpe_actif_max = sharpe_actif_min
             sharpe_actif_min -= 0.1
-    print("PORTFOLIO GENERATED")
     return portfolio
 
 def max_list(l):
@@ -94,11 +76,10 @@ def post_treatment(portfolio):
     base_sharpe = float(restManager.invoke_ratio([sharpe_id], [restManager.portfolio_id], 0, period_start_date,
                                     period_end_date)[str(restManager.portfolio_id)][str(sharpe_id)][
                 'value'].replace(',', '.'))
-    print(base_sharpe)
     while (len(portfolio) > 15):
         ratio_sharpe_list = []
         for i in range(0, len(portfolio) - 1):
-            asset = tmp.pop(i)
+            tmp.pop(i)
             restManager.update_portfolio(restManager.portfolio_id, tmp)
             restManager.update_portfolio(restManager.portfolio_id, tmp)
             ratio_sharpe_list.append(float(restManager.invoke_ratio([sharpe_id], [restManager.portfolio_id], 0, period_start_date,
@@ -106,15 +87,12 @@ def post_treatment(portfolio):
                 'value'].replace(',', '.')))
             tmp = portfolio.copy()
         index_max, sharpe_max = max_list(ratio_sharpe_list)
-        print(ratio_sharpe_list)
         if (sharpe_max < base_sharpe):
             break
         else:
             portfolio.pop(index_max)
             base_sharpe = sharpe_max
             tmp = portfolio.copy()
-            pprint(index_max)
-            pprint(sharpe_max)
     return portfolio
 
 
@@ -148,16 +126,9 @@ def check_portfolio_conditions(portfolio_id):
         print(
             "portfolio size: " + str(portfolio_size) + " is more than the maximal required size: " + str(nb_asset_max))
         return False
-    '''
-    rate = stock_rate(values, portfolio_size)
-    if rate > 50.0:  # voir si ça fait bien la virgule
-        print("the rate of stocks : " + rate + "% is more than the required 50%")
-        return False
-    '''
     return True
 
 def stock_rate(portfolio_values, nb_assets):
-    rate = 0
     nb_stocks = 0
     for value in portfolio_values:
         if value["TYPE"]["value"] == "STOCK":

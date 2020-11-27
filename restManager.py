@@ -85,7 +85,6 @@ def update_portfolio(_portfolio_id, new_portfolio):
         print(res.status_code)
         print(res.text)
         return False
-    print("Update OK")
     return True
 
 def get_ratio_list():
