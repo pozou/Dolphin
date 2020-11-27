@@ -4,7 +4,7 @@ import requests
 import restManager
 from pprint import pprint
 
-nb_actif = 22
+nb_actif = 40
 nb_asset_min = 15
 nb_asset_max = 40
 
@@ -25,8 +25,9 @@ def generate_portfolio():
     list_asset = restManager.get_list_stock()
     i = 0
     money_total = 10000
-    sharpe_actif_min = 1.0
+    sharpe_actif_min = 0.8
     sharpe_actif_max = 1000.0
+    print(len(list_asset))
     while len(portfolio) < nb_actif:
         try:
             if list_asset[i]['CURRENCY']['value'] != 'EUR':
@@ -72,9 +73,51 @@ def generate_portfolio():
             i = 0
             sharpe_actif_max = sharpe_actif_min
             sharpe_actif_min -= 0.1
-
     print("PORTFOLIO GENERATED")
     return portfolio
+
+def max_list(l):
+    index_max = 0
+    value_max = l[0]
+    i = 1
+    while i < len(l):
+        if (l[i] > value_max):
+            index_max = i
+            value_max = l[i]
+        i += 1
+    return index_max, value_max
+
+def post_treatment(portfolio):
+    tmp = portfolio.copy()
+    restManager.update_portfolio(restManager.portfolio_id, portfolio)
+    restManager.update_portfolio(restManager.portfolio_id, portfolio)
+    base_sharpe = float(restManager.invoke_ratio([sharpe_id], [restManager.portfolio_id], 0, period_start_date,
+                                    period_end_date)[str(restManager.portfolio_id)][str(sharpe_id)][
+                'value'].replace(',', '.'))
+    print(base_sharpe)
+    while (len(portfolio) > 15):
+        ratio_sharpe_list = []
+        for i in range(0, len(portfolio) - 1):
+            asset = tmp.pop(i)
+            restManager.update_portfolio(restManager.portfolio_id, tmp)
+            restManager.update_portfolio(restManager.portfolio_id, tmp)
+            ratio_sharpe_list.append(float(restManager.invoke_ratio([sharpe_id], [restManager.portfolio_id], 0, period_start_date,
+                                    period_end_date)[str(restManager.portfolio_id)][str(sharpe_id)][
+                'value'].replace(',', '.')))
+            tmp = portfolio.copy()
+        index_max, sharpe_max = max_list(ratio_sharpe_list)
+        print(ratio_sharpe_list)
+        if (sharpe_max < base_sharpe):
+            break
+        else:
+            portfolio.pop(index_max)
+            base_sharpe = sharpe_max
+            tmp = portfolio.copy()
+            pprint(index_max)
+            pprint(sharpe_max)
+    return portfolio
+
+
 
 
 def ratio_correlation(benchmark, asset):
