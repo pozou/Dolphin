@@ -4,7 +4,7 @@ import requests
 
 import restManager
 from pprint import pprint
-nb_actif = 20
+nb_actif = 22
 nb_asset_min = 15
 nb_asset_max = 40
 
@@ -45,26 +45,45 @@ def generate_portfolio():
         #
         # ratio de sharpe d'un actif
         sharpe_actif = float(restManager.invoke_ratio([sharpe_id], [asset_id], 0, period_start_date, period_end_date)[str(asset_id)][str(sharpe_id)]['value'].replace(',', '.'))
+        '''
+        #-------------------
+        correlation = ratio_correlation(1832, asset_id)
+        ratio_sharpe_correlation = sharpe_actif / correlation
+        if sharpe_actif > 0.8 and ratio_sharpe_correlation > 5.0:
+            print("id asset : ", asset_id, " sharpe : ", sharpe_actif, " correlation : ", correlation,
+                  " ratio sharpe/correlation : ", float(sharpe_actif / correlation))
+            tmp = {"quantity": quantity, "asset": int(list_asset[i]["ASSET_DATABASE_ID"]["value"])}
+            portfolio.append(tmp)
+            print("len portofolio : ", len(portfolio))
+        i += 1
+        #-------------------
         #pprint(sharpe_actif)
-        if  sharpe_actif > sharpe_actif_min:
-            if (sharpe_actif > sharpe_actif_max):
+        '''
+        if sharpe_actif > sharpe_actif_min:
+            correlation = ratio_correlation(1832, asset_id)
+            ratio_sharpe_correlation = sharpe_actif / correlation
+            if (sharpe_actif > sharpe_actif_max):#or ratio_sharpe_correlation < 5.0):
                 i += 1
                 continue
             tmp = {"quantity": quantity, "asset": int(list_asset[i]["ASSET_DATABASE_ID"]["value"])}
             portfolio.append(tmp)
             money_res += quantity * value + 1
             print("len portofolio : ", len(portfolio))
+
+            print("id asset : ", asset_id, " sharpe : ", sharpe_actif, " correlation : ", correlation, " ratio sharpe/correlation : ", ratio_sharpe_correlation)
         i += 1
         if (i >= len(list_asset)):
             i = 0
             sharpe_actif_max = sharpe_actif_min
             sharpe_actif_min -= 0.1
+
     print("PORTFOLIO GENERATED")
-    print(money_res)
+    #print(money_res)
+    money_total = 1000
     return (portfolio, money_total)
 
 
-def ratio_sharpe_correlation(benchmark, asset):
+def ratio_correlation(benchmark, asset):
         return float(restManager.invoke_ratio([11], [asset], benchmark, period_start_date, period_end_date)[str(asset)]['11'][
                 'value'].replace(',', '.'))
 
